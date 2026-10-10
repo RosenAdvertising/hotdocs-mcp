@@ -1,0 +1,44 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "hotdocs-advance-mcp"
+version = "0.1.0"
+description = "MCP server for method-verified HotDocs Advance API operations"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+license = { text = "MIT" }
+dependencies = [
+    "httpx==0.28.1",
+    "mcp>=2.3,<3",
+    "pydantic>=2.12,<3",
+]
+
+[project.scripts]
+hotdocs-mcp-setup = "hotdocs_mcp.setup:setup"
+hotdocs-mcp-verify = "hotdocs_mcp.setup:verify"
+hotdocs-mcp = "hotdocs_mcp.server:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+    "pytest-asyncio>=1.3.0",
+    "respx>=0.22,<1",
+    "ruff>=0.12,<1",
+]
+
+[tool.pytest.ini_options]
+addopts = "-ra"
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["hotdocs_mcp"]
