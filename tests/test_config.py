@@ -45,5 +45,5 @@ def test_only_method_verified_api_version_is_accepted() -> None:
         "HOTDOCS_PRINCIPAL_PASSWORD": "password",
         "HOTDOCS_API_VERSION": "1.1",
     }
-    with pytest.raises(ConfigError, match=r"method-verified only for v2\.0"):
+    with pytest.raises(ConfigError, match=r"supports HotDocs API v2\.0 only"):
         Settings.from_env(values)

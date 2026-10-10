@@ -16,6 +16,7 @@ from hotdocs_mcp.urls import validate_url_arguments
 
 JsonValue = dict[str, Any] | list[Any] | str | int | float | bool | None
 ItemT = TypeVar("ItemT")
+SAFE_RETRY_METHODS = frozenset({"GET", "HEAD", "OPTIONS"})
 
 
 class HotDocsError(ToolError):
@@ -96,6 +97,8 @@ class HotDocsClient:
                     "PrincipalPassword": self.settings.principal_password,
                 },
                 headers={"Accept": "text/plain"},
+                # Sign-in only issues a bearer token and changes no records, so it may be resent.
+                idempotent=True,
             )
             self._raise_for_vendor_error(response)
             token = response.text.strip()
@@ -192,8 +195,14 @@ class HotDocsClient:
             if self._token == rejected_token:
                 self._token = None
 
-    async def _send_with_retries(self, method: str, url: str, **kwargs: Any) -> httpx.Response:
-        for attempt in range(self._max_retries + 1):
+    async def _send_with_retries(
+        self, method: str, url: str, *, idempotent: bool = False, **kwargs: Any
+    ) -> httpx.Response:
+        # Only reads (and calls the code marks idempotent) are resent: a write that got a 5xx
+        # may already have been applied, so resending it could apply it twice.
+        can_retry = idempotent or method.upper() in SAFE_RETRY_METHODS
+        max_retries = self._max_retries if can_retry else 0
+        for attempt in range(max_retries + 1):
             try:
                 response = await self._http.request(method, url, **kwargs)
             except httpx.RequestError as exc:
@@ -202,7 +211,7 @@ class HotDocsClient:
                 ) from exc
 
             retryable = response.status_code == 429 or 500 <= response.status_code <= 599
-            if not retryable or attempt == self._max_retries:
+            if not retryable or attempt == max_retries:
                 return response
             await self._sleep(self._retry_delay(response, attempt))
         raise AssertionError("retry loop exhausted unexpectedly")

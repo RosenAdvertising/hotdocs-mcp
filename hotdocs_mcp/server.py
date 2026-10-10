@@ -114,7 +114,7 @@ def _require_xsd_attestation(answer_xml: str | None, answer_xml_is_xsd_validated
 
 
 def create_server(client: HotDocsClient | LazyClient | None = None) -> MCPServer:
-    """Create the MCP application and register every method-verified tool."""
+    """Create the MCP application and register its HotDocs Advance tools."""
     client = client if client is not None else LazyClient()
     server = MCPServer("HotDocs Advance", title="HotDocs Advance", version=__version__)
 

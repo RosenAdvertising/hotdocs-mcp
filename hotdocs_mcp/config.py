@@ -55,7 +55,7 @@ class Settings:
             raise ConfigError("HOTDOCS_API_VERSION must look like '2.0'.")
         if api_version != "2.0":
             raise ConfigError(
-                "HOTDOCS_API_VERSION must be '2.0'; this build is method-verified only for v2.0."
+                "HOTDOCS_API_VERSION must be '2.0'; this server supports HotDocs API v2.0 only."
             )
 
         return cls(

@@ -9,7 +9,7 @@ from mcp.server import MCPServer
 from mcp.server.mcpserver.exceptions import ToolError, UnexpectedToolError
 from mcp.server.mcpserver.utilities.func_metadata import FuncMetadata
 
-from hotdocs_mcp.client import HotDocsAPIError, HotDocsClient, HotDocsError
+from hotdocs_mcp.client import HotDocsAPIError, HotDocsClient, HotDocsError, HotDocsTransportError
 from hotdocs_mcp.config import ConfigError, Settings
 from hotdocs_mcp.paths import validate_path_arguments
 from hotdocs_mcp.urls import validate_url_arguments
@@ -19,6 +19,10 @@ CONFIGURATION_HELP = (
     "Set HOTDOCS_TENANCY_MONIKER, HOTDOCS_CLIENT_NAME, HOTDOCS_PRINCIPAL_NAME, "
     "HOTDOCS_PRINCIPAL_PASSWORD. "
     "Run hotdocs-mcp-setup for instructions, then restart the MCP server."
+)
+NETWORK_ERROR_MESSAGE = (
+    "HotDocs request failed because the connection timed out or was unavailable. "
+    "Check the connection and whether any write completed before retrying."
 )
 
 
@@ -66,11 +70,8 @@ def safe_error(exc: Exception) -> ToolError:
         else:
             message = "Request rejected or response invalid. Check inputs and API configuration."
         return ToolError(message)
-    if isinstance(exc, httpx.RequestError):
-        return ToolError(
-            "Connection failed; the operation outcome may be unknown. "
-            "Check connectivity and whether any write completed before retrying."
-        )
+    if isinstance(exc, (httpx.RequestError, HotDocsTransportError)):
+        return ToolError(NETWORK_ERROR_MESSAGE)
     if type(exc) in (ToolError, HotDocsError):
         return exc
     if isinstance(exc, ValueError):
