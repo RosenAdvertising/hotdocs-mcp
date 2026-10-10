@@ -7,7 +7,7 @@ name = "hotdocs-advance-mcp"
 version = "0.1.0"
 description = "MCP server for method-verified HotDocs Advance API operations"
 readme = "README.md"
-requires-python = ">=3.12,<3.13"
+requires-python = ">=3.14,<3.15"
 license = { text = "MIT" }
 dependencies = [
     "httpx==0.28.1",
