@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "hotdocs-advance-mcp"
 version = "0.1.0"
-description = "MCP server for method-verified HotDocs Advance API operations"
+description = "MCP server for HotDocs Advance: work items, templates and documents"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 license = { text = "MIT" }
@@ -14,6 +14,20 @@ dependencies = [
     "mcp>=2.3,<3",
     "pydantic>=2.12,<3",
 ]
+classifiers = [
+    "Intended Audience :: Legal Industry",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Office/Business",
+]
+
+[project.urls]
+Homepage = "https://github.com/RosenAdvertising/hotdocs-mcp"
+Repository = "https://github.com/RosenAdvertising/hotdocs-mcp"
+Issues = "https://github.com/RosenAdvertising/hotdocs-mcp/issues"
 
 [project.scripts]
 hotdocs-mcp-setup = "hotdocs_mcp.setup:setup"
