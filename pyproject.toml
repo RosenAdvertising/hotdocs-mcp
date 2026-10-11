@@ -7,7 +7,7 @@ name = "hotdocs-advance-mcp"
 version = "0.1.0"
 description = "MCP server for HotDocs Advance: work items, templates and documents"
 readme = "README.md"
-requires-python = ">=3.12,<3.13"
+requires-python = ">=3.10"
 license = { text = "MIT" }
 dependencies = [
     "httpx==0.28.1",
@@ -20,7 +20,11 @@ classifiers = [
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Office/Business",
 ]
 
